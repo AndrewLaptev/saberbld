@@ -1,5 +1,8 @@
 import yaml
 
+from yaml.parser import ParserError
+from pydantic import ValidationError
+
 from app.models import (
     BuildModel,
     TaskModel,
@@ -8,21 +11,34 @@ from app.models import (
     CommandsAliasesPlural,
 )
 
+
 BUILDS = CommandsAliasesPlural.BUILDS.value
 TASKS = CommandsAliasesPlural.TASKS.value
 
 
 class Core:
+    """
+    Main logic for generate dependencies graph
+    """
+
     def __init__(
         self,
         builds_file_path: str,
         tasks_file_path: str,
     ) -> None:
-        with open(builds_file_path, "r") as file:
-            self.builds_data = BuildsModel(**yaml.safe_load(file))
-
-        with open(tasks_file_path, "r") as file:
-            self.tasks_data = TasksModel(**yaml.safe_load(file))
+        try:
+            with open(builds_file_path, "r") as file:
+                self.builds_data = BuildsModel(**yaml.safe_load(file))
+            with open(tasks_file_path, "r") as file:
+                self.tasks_data = TasksModel(**yaml.safe_load(file))
+        except FileNotFoundError as e:
+            raise SystemExit(
+                f"YAML file not found error: {e.strerror.lower()} {e.filename}"
+            )
+        except ParserError as e:
+            raise SystemExit(f"YAML parsing error: {e}")
+        except ValidationError as e:
+            raise SystemExit(f"YAML validation error: {e}")
 
         self.maps: dict[str, dict[str, BuildModel | TaskModel]] = {
             BUILDS: {build.name: build for build in self.builds_data.builds},
@@ -31,25 +47,31 @@ class Core:
         self._uniq_graph_nodes: set[str] = set()
 
     def task_deps_graph(self, name: str) -> dict | None:
+        """
+        Generate task dependencies graph
+        """
         if name in self._uniq_graph_nodes:
-            raise Exception("LOOP")
-        
+            raise SystemExit(f"Task dependencies has a loop in task: {name}!")
+
         self._uniq_graph_nodes.add(name)
 
-        task_deps = {}
+        deps_graph = {}
 
         if len(self.maps[TASKS][name].dependencies) == 0:
             return None
         else:
             for dep in self.maps[TASKS][name].dependencies:
-                task_deps[dep] = self.task_deps_graph(dep)
+                deps_graph[dep] = self.task_deps_graph(dep)
 
-        return task_deps
+        return deps_graph
 
     def build_tasks_graph(self, name: str) -> dict:
-        build = {}
+        """
+        Generate build tasks graph
+        """
+        tasks_graph = {}
 
         for task in self.maps[BUILDS][name].tasks:
-            build[task] = self.task_deps_graph(task)
+            tasks_graph[task] = self.task_deps_graph(task)
 
-        return build
+        return tasks_graph

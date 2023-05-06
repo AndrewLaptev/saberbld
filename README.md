@@ -57,7 +57,7 @@ Utility have a next commands:
   - `--tasks-file` - filepath to tasks.yaml file
   - `--graph` - view dependencies tree as graph
 
-The Typer framework allows you to implement adaptive help information depending on the team. Information about data types and default values is also displayed in a convenient format:
+The Typer framework allows you to implement adaptive help information depending on the command/option. Information about data types and default values is also displayed in a convenient format:
 
 ![image](docs/images/1.png)
 

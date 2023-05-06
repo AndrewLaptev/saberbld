@@ -13,7 +13,7 @@ CLI application for comfort view information about builds ant tasks
 
 This utility parses two files with `builds` and `tasks` and outputs them according to a certain requirement: when you output an assembly or task, you need to have dependencies first, and then tasks. In addition, the program can draw a dependency graph
 
-The application is based on the Typer framework, which provides a convenient toolkit for creating an application CLI interface and input verification
+The application is based on the [Typer](https://typer.tiangolo.com) framework, which provides a convenient toolkit for creating an application CLI interface and input verification
 
 ## Installation
 
@@ -64,7 +64,7 @@ The Typer framework allows you to implement adaptive help information depending 
 
 ## Testing
 
-Testing of this program is carried out using the `pytest` library, and the measurement of code coverage is carried out using `pytest-cov`
+Testing of this program is carried out using the [pytest](https://docs.pytest.org/en/7.3.x/) library, and the measurement of code coverage is carried out using [pytest-cov](https://pypi.org/project/pytest-cov/)
 
 Results of last test coverage keep in `tests/coverage.txt`
 

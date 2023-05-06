@@ -2,12 +2,14 @@ from typing import Annotated
 
 from typer import Typer, Option, Argument
 
-from core import Core
-from view import View
-from models import CommandsAliasesPlural, CommandsAliases
+from app.core import Core
+from app.view import View
+from app.models import CommandsAliasesPlural, CommandsAliases
 
 
-app = Typer()
+app = Typer(
+    help="CLI application for comfort view information about builds ant tasks"
+)
 
 
 @app.command()
@@ -59,9 +61,9 @@ def get(
         deps_graph = core.task_deps_graph(name)
 
     if graph:
-        view.print_graph(deps_graph)
+        view.print_graph(name, deps_graph)
     else:
-        view.print_list_graph(deps_graph)
+        view.print_list_graph(name, deps_graph)
 
 
 if __name__ == "__main__":

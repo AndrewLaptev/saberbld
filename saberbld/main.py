@@ -2,9 +2,9 @@ from typing import Annotated
 
 from typer import Typer, Option, Argument
 
-from app.core import Core
-from app.view import View
-from app.models import CommandsAliasesPlural, CommandsAliases
+from saberbld.core import Core
+from saberbld.view import View
+from saberbld.models import CommandsAliasesPlural, CommandsAliases
 
 
 app = Typer(

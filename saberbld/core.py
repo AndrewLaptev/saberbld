@@ -3,7 +3,7 @@ import yaml
 from yaml.parser import ParserError
 from pydantic import ValidationError
 
-from app.models import (
+from saberbld.models import (
     BuildModel,
     TaskModel,
     BuildsModel,

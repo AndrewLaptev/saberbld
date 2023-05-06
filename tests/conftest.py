@@ -5,7 +5,7 @@ from random import randint
 from pytest import FixtureRequest, fixture
 from typer.testing import CliRunner
 
-from app.main import app
+from saberbld.main import app
 
 
 BUILDS_TEST_FILE = "tests/data/builds_test.yaml"

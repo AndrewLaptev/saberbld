@@ -57,11 +57,14 @@ class Core:
 
         deps_graph = {}
 
-        if len(self.maps[TASKS][name].dependencies) == 0:
-            return None
-        else:
-            for dep in self.maps[TASKS][name].dependencies:
-                deps_graph[dep] = self.task_deps_graph(dep)
+        try:
+            if len(self.maps[TASKS][name].dependencies) == 0:
+                return None
+            else:
+                for dep in self.maps[TASKS][name].dependencies:
+                    deps_graph[dep] = self.task_deps_graph(dep)
+        except KeyError as e:
+            raise SystemExit(f"Name '{e.args[-1]}' is not exist in tasks!")
 
         return deps_graph
 
@@ -71,7 +74,10 @@ class Core:
         """
         tasks_graph = {}
 
-        for task in self.maps[BUILDS][name].tasks:
-            tasks_graph[task] = self.task_deps_graph(task)
+        try:
+            for task in self.maps[BUILDS][name].tasks:
+                tasks_graph[task] = self.task_deps_graph(task)
+        except KeyError as e:
+            raise SystemExit(f"Name '{e.args[-1]}' is not exist in builds!")
 
         return tasks_graph
